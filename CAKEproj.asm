@@ -10,8 +10,6 @@ input: .space 10
 board: .space 19
 fout: .asciiz "board.txt"
 reservedspace: .space 2048
-cont: .asciiz "reading file... "
-buffer: .asciiz "some text to test the program."
 
 .text
 main:
@@ -54,14 +52,6 @@ main:
 	j exit
 	
 loadDictionary:
-    #open
-    li $v0, 13
-    la $a0, fout
-    li $a1, 1
-    li $a2, 0
-    syscall
-    move $s6, $v0
-    
     li $v0, 13
     la $a0, fout
     li $a1, 0
@@ -73,10 +63,6 @@ loadDictionary:
     move $a0, $s6
     la $a1, reservedspace
     li $a2, 1024
-    syscall
-
-    li  $v0, 4
-    la  $a0, cont
     syscall
     
     # prints results of file
