@@ -4,10 +4,15 @@ scoremesg: .asciiz "Score: "
 screenclear: .asciiz "\n\n\n\n\n\n\n\n\n\n\n\n\n"
 commfoundmesg: .asciiz "Commands: 1-shuffle, 2-quit\nFound words: \n"
 exitmesg: .asciiz "Goodbye, thanks for playing!\n"
-commOne: .byte '1'
-commTwo: .byte '2'
+commOne: .word '1'
+commTwo: .word '2'
 input: .space 10
 board: .space 19
+fout: .asciiz "board.txt"
+reservedspace: .space 2048
+cont: .asciiz "reading file... "
+buffer: .asciiz "some text to test the program."
+
 .text
 main:
 	li $v0, 4
@@ -34,17 +39,61 @@ main:
 	li $a1, 10
 	syscall
 	lw $t1, 0($a0)	# get first char into $t1
-	lw $t2, commOne
-	beq $t1, $t2, shuffle	# if command 1
-	lw $t2, commTwo
-	bne $t1, $t2, processing	# else if command 2
-	li $v0, 4		# if it's not command 2, 'exit', we skip this and go on to the processing
-	la $a0, exitmesg	# say goodbye
-	syscall
-	li $v0, 10
-	syscall
+	#lw $t2, commOne
+	#beq $t1, $t2, shuffle	# if command 1
+	#lw $t2, commTwo
+	#bne $t1, $t2, processing	# else if command 2
+	#li $v0, 4		# if it's not command 2, 'exit', we skip this and go on to the processing
+	#la $a0, exitmesg	# say goodbye
+	#syscall
+	#li $v0, 10
+	#syscall
+	
+	jal loadDictionary # load dictionary
+	
+	j exit
+	
+loadDictionary:
+    #open
+    li $v0, 13
+    la $a0, fout
+    li $a1, 1
+    li $a2, 0
+    syscall
+    move $s6, $v0
+    
+    li $v0, 13
+    la $a0, fout
+    li $a1, 0
+    li $a2, 0
+    syscall
+    move $s6, $v0
+
+    li $v0, 14
+    move $a0, $s6
+    la $a1, reservedspace
+    li $a2, 1024
+    syscall
+
+    li  $v0, 4
+    la  $a0, cont
+    syscall
+    
+    # prints results of file
+    la $a0, reservedspace
+    li  $v0, 4
+    syscall
+    
+    close:
+    li $v0, 16
+    move $a0, $s6
+    syscall
+    
+    jr $ra
+
 shuffle:
 	# shuffle the board
+	j main
 	
 processing:
 	# process the user input
@@ -52,3 +101,6 @@ processing:
 	
 	
 printfound:
+	jr $ra
+
+exit:
