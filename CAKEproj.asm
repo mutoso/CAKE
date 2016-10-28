@@ -1,11 +1,11 @@
 .data
-promptmesg: .asciiz "Enter a word: "
+promptmesg: .asciiz "\nEnter a word: "
 scoremesg: .asciiz "Score: "
 screenclear: .asciiz "\n\n\n\n\n\n\n\n\n\n\n\n\n"
 commfoundmesg: .asciiz "Commands: 1-shuffle, 2-quit\nFound words: \n"
 exitmesg: .asciiz "Goodbye, thanks for playing!\n"
-commOne: .word '1'
-commTwo: .word '2'
+commOne: .word 1
+commTwo: .word 2
 input: .space 10
 board: .space 19
 fout: .asciiz "board.txt"
@@ -37,10 +37,11 @@ main:
 	li $a1, 10
 	syscall
 	lw $t1, 0($a0)	# get first char into $t1
-	#lw $t2, commOne
-	#beq $t1, $t2, shuffle	# if command 1
-	#lw $t2, commTwo
-	#bne $t1, $t2, processing	# else if command 2
+	#move $t1, $a0       # not sure the command above works properly??
+	lw $t2, commOne
+	beq $t1, $t2, shuffle	# if command 1
+	lw $t2, commTwo
+	bne $t1, $t2, processing	# else if command 2
 	#li $v0, 4		# if it's not command 2, 'exit', we skip this and go on to the processing
 	#la $a0, exitmesg	# say goodbye
 	#syscall
