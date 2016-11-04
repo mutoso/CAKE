@@ -6,6 +6,7 @@ commfoundmesg: .asciiz "Commands: 1-shuffle, 2-quit\nFound words: \n"
 exitmesg: .asciiz "Goodbye, thanks for playing!\n"
 errormesg: .asciiz "Error: Invalid word.\n"
 usedwordmesg: .asciiz "Error: Word already used.\n"
+wordFoundmesg: .asciiz "Found one!\n"
 commOne: .word 0x31
 commTwo: .word 0x32
 newLine: .word 0x0A
@@ -194,13 +195,13 @@ shuffleExit:
 
 processing:
 	# process the user input
-		# if string length is <4
 	jal stringLength
 	move $t2, $v0
 	add $t3, $zero, 4
 	slt $t1, $t2, $t3
-	beq $t1, 1, invalidString
+	beq $t1, 1, invalidString	# if string length is < 4
 	# continue processing
+	
 	j main
 	
 stringLength:
