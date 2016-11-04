@@ -4,53 +4,57 @@ scoremesg: .asciiz "Score: "
 screenclear: .asciiz "\n\n\n\n\n\n\n\n\n\n\n\n\n"
 commfoundmesg: .asciiz "Commands: 1-shuffle, 2-quit\nFound words: \n"
 exitmesg: .asciiz "Goodbye, thanks for playing!\n"
-commOne: .word 1
-commTwo: .word 2
+commOne: .word 0x31
+commTwo: .word 0x32
 input: .space 10
 board: .space 19
 fout: .asciiz "board.txt"
 reservedspace: .space 2048
 
 .text
+	jal loadDictionary # load dictionary
 main:
 	li $v0, 4
 	la $a0, screenclear	# clear the previous screen
 	syscall
-	li $v0, 4
+	
+	li $v0, 4           # print found words message
 	la $a0, commfoundmesg
 	syscall
+	
 	jal printfound	# print the currently found set of words
 	li $v0, 4
 	la $a0, scoremesg
 	syscall
+	
 	li $v0, 1
 	add $a0, $s7, $zero		# assuming score is in $s7
 	syscall		# display the score
-	li $v0, 4
-	la $a0, board	# print the board
+	
+	li $v0, 4 # print board
+	la $a0, board	
 	syscall
-	li $v0, 4
+	
+	li $v0, 4   # print message prompting for input
 	la $a0, promptmesg
 	syscall
-	li $v0, 8	# get the input
+	
+	li $v0, 8 # get the input
 	la $a0, input
 	li $a1, 10
 	syscall
-	lw $t1, 0($a0)	# get first char into $t1
-	#move $t1, $a0       # not sure the command above works properly??
+	
+	# determine what function to call
+	lb $t1, 0($a0) # get first char of input into $t1
 	lw $t2, commOne
 	beq $t1, $t2, shuffle	# if command 1
 	lw $t2, commTwo
 	bne $t1, $t2, processing	# else if command 2
-	#li $v0, 4		# if it's not command 2, 'exit', we skip this and go on to the processing
-	#la $a0, exitmesg	# say goodbye
-	#syscall
-	#li $v0, 10
-	#syscall
-	
-	jal loadDictionary # load dictionary
-	
-	j exit
+	li $v0, 4		# if it's not command 2, 'exit', we skip this and go on to the processing
+	la $a0, exitmesg	# say goodbye
+	syscall
+	li $v0, 10
+	syscall
 	
 loadDictionary:
 	# open file syscall
@@ -72,9 +76,9 @@ loadDictionary:
     syscall
     
     # prints results of file
-    la $a0, reservedspace
-    li  $v0, 4
-    syscall
+    #la $a0, reservedspace
+    #li  $v0, 4
+    #syscall
     
     close:
     li $v0, 16
