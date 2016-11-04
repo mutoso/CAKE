@@ -118,7 +118,7 @@ shuffle1:
  	sb $t6, 4($t4)
  	sb $t7, 2($t4)
  	sb $t8, 0($t4)
-     	j shuffle
+    j shuffle
  
 shuffle2:
 	#Load board into registers
@@ -164,7 +164,7 @@ shuffle3:
  	sb $t6, 16($t4)
  	sb $t7, 10($t4)
  	sb $t8, 12($t4)
-     	j shuffle
+    j shuffle
  
 shuffle4:
 	#Load board into registers
@@ -187,7 +187,7 @@ shuffle4:
  	sb $t6, 10($t4)
  	sb $t7, 16($t4)
  	sb $t8, 14($t4)
-     	j shuffle
+    j shuffle
 
 shuffleExit:
 	j main
@@ -222,13 +222,17 @@ checkInput:
 	li $t1, 0
 	# base address for input string
 	la $t2, input
+	# boolean for contains center letter
+	li $t5, 0
 checkInputLoop:
 	# go to next character
 	add $t3, $t2, $t1
+	# load that character
+	lb $t4, ($t3)
 	# If we've hit the end of the string
 	beq $t4, $zero, checkInputExit
-	# call strLen
-	jal strLen
+	# call stringLen
+	jal stringLen
 	# increment index
 	add $t1, $t1, 1
 	j checkInputLoop
