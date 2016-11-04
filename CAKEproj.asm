@@ -244,6 +244,23 @@ invalidString:
 	# j main	# ???
 
 printfound:
+	la $t0, reservedspace # load reserved space string into new
+
+foundLoop:
+	lb   $t1, 0($t0)
+	beq  $t1, $zero endFound
+
+	addi $t0, $t0, 1
+	j foundLoop
+
+endFound:
+	la $t1 reservedspace
+	sub $t3, $t0, $t1 #$t3 now contains the length of the string
+	
+	li $v0, 1
+	la $a0, ($t3)	# print the length of reservedspace
+	syscall
+	
 	jr $ra
 
 exit:
