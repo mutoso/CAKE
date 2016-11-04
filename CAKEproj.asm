@@ -53,11 +53,16 @@ main:
 	j exit
 	
 loadDictionary:
+	# open file syscall
     li $v0, 13
+    # load filename
     la $a0, fout
+    # open for reading
     li $a1, 0
+    # mode is ignored
     li $a2, 0
     syscall
+    
     move $s6, $v0
 
     li $v0, 14
@@ -195,6 +200,23 @@ processing:
 	# process the user input
 	j main
 	
+checkInput:
+	# index
+	li $t1, 0
+	# base address for input string
+	la $t2, input
+checkInputLoop:
+	# go to next character
+	add $t3, $t2, $t1
+	# If we've hit the end of the string
+	beq $t4, $zero, checkInputExit
+	# If the input string is longer than 9 characters
+	beq $t1, 10, checkInputExit
+	
+	# increment index
+	add $t1, $t1, 1
+	j checkInputLoop
+checkInputExit:
 	
 printfound:
 	jr $ra
