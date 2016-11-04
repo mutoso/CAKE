@@ -227,9 +227,8 @@ checkInputLoop:
 	add $t3, $t2, $t1
 	# If we've hit the end of the string
 	beq $t4, $zero, checkInputExit
-	# If the input string is longer than 9 characters
-	beq $t1, 10, checkInputExit
-	
+	# call strLen
+	jal strLen
 	# increment index
 	add $t1, $t1, 1
 	j checkInputLoop
