@@ -48,11 +48,16 @@ main:
 	j exit		# if command 2, exit program
 	
 loadDictionary:
+	# open file syscall
     li $v0, 13
+    # load filename
     la $a0, fout
+    # open for reading
     li $a1, 0
+    # mode is ignored
     li $a2, 0
     syscall
+    
     move $s6, $v0
 
     li $v0, 14
@@ -74,9 +79,119 @@ loadDictionary:
     jr $ra
 
 shuffle:
-	# shuffle the board
-	j main
+
+	addi $s0, $s0, 1
+	#Generate Random Number between 0-3
+	li $a1, 3
+	li $v0, 42
+	syscall
 	
+	#Store Random Number into $t1
+	move $t1, $a0
+
+	#Branch to Corresponding Shuffle
+	beq $s0, 4, shuffleExit
+	beq $t1, 0, shuffle1
+	beq $t1, 1, shuffle2
+	beq $t1, 2, shuffle3
+	beq $t1, 3, shuffle4
+
+ 
+shuffle1:
+	#Load board into registers
+ 	la $t4, board
+ 	lb $t0, 0($t4)
+ 	lb $t1, 2($t4)
+ 	lb $t2, 4($t4)
+ 	lb $t3, 6($t4)
+ 	lb $t5, 10($t4)
+ 	lb $t6, 12($t4)
+ 	lb $t7, 14($t4)
+ 	lb $t8, 16($t4)
+ 
+ 	#Store shuffled registers into board
+ 	sb $t0, 16($t4)
+ 	sb $t1, 14($t4)
+ 	sb $t2, 12($t4)
+ 	sb $t3, 10($t4)
+ 	sb $t5, 6($t4)
+ 	sb $t6, 4($t4)
+ 	sb $t7, 2($t4)
+ 	sb $t8, 0($t4)
+     	j shuffle
+ 
+shuffle2:
+	#Load board into registers
+ 	la $t4, board
+ 	lb $t0, 0($t4)
+ 	lb $t1, 2($t4)
+ 	lb $t2, 4($t4)
+ 	lb $t3, 6($t4)
+ 	lb $t5, 10($t4)
+ 	lb $t6, 12($t4)
+ 	lb $t7, 14($t4)
+ 	lb $t8, 16($t4)
+ 
+ 	#Store shuffled registers into board
+  	sb $t0, 10($t4)
+ 	sb $t1, 12($t4)
+ 	sb $t2, 14($t4)
+ 	sb $t3, 16($t4)
+ 	sb $t5, 0($t4)
+ 	sb $t6, 2($t4)
+ 	sb $t7, 4($t4)
+ 	sb $t8, 6($t4)
+     	j shuffle
+ 
+shuffle3:
+	#Load board into registers
+ 	la $t4, board
+ 	lb $t0, 0($t4)
+ 	lb $t1, 2($t4)
+ 	lb $t2, 4($t4)
+ 	lb $t3, 6($t4)
+ 	lb $t5, 10($t4)
+ 	lb $t6, 12($t4)
+ 	lb $t7, 14($t4)
+ 	lb $t8, 16($t4)
+ 	
+  	#Store shuffled registers into board
+ 	sb $t0, 4($t4)
+ 	sb $t1, 6($t4)
+ 	sb $t2, 0($t4)
+ 	sb $t3, 2($t4)
+ 	sb $t5, 14($t4)
+ 	sb $t6, 16($t4)
+ 	sb $t7, 10($t4)
+ 	sb $t8, 12($t4)
+     	j shuffle
+ 
+shuffle4:
+	#Load board into registers
+ 	la $t4, board
+ 	lb $t0, 0($t4)
+ 	lb $t1, 2($t4)
+ 	lb $t2, 4($t4)
+ 	lb $t3, 6($t4)
+ 	lb $t5, 10($t4)
+ 	lb $t6, 12($t4)
+ 	lb $t7, 14($t4)
+ 	lb $t8, 16($t4)
+ 	
+  	#Store shuffled registers into board
+ 	sb $t0, 2($t4)
+ 	sb $t1, 0($t4)
+ 	sb $t2, 6($t4)
+ 	sb $t3, 4($t4)
+ 	sb $t5, 12($t4)
+ 	sb $t6, 10($t4)
+ 	sb $t7, 16($t4)
+ 	sb $t8, 14($t4)
+     	j shuffle
+
+shuffleExit:
+	j main
+
 processing:
 	# process the user input
 		# if string length is <4
@@ -101,6 +216,25 @@ strLenLoop:
 exitStrLen:
 	move $v0, $t0
 	jr $ra
+
+checkInput:
+	# index
+	li $t1, 0
+	# base address for input string
+	la $t2, input
+checkInputLoop:
+	# go to next character
+	add $t3, $t2, $t1
+	# If we've hit the end of the string
+	beq $t4, $zero, checkInputExit
+	# If the input string is longer than 9 characters
+	beq $t1, 10, checkInputExit
+	
+	# increment index
+	add $t1, $t1, 1
+	j checkInputLoop
+checkInputExit:
+
 	
 invalidString:
 	li $v0, 4
