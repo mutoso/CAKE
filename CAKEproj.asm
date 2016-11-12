@@ -3,7 +3,7 @@ promptmesg: .asciiz "\nEnter a word: "
 scoremesg: .asciiz "Score: "
 screenclear: .asciiz "\n\n\n\n\n\n\n\n\n\n\n\n\n"
 commfoundmesg: .asciiz "Commands: 1-shuffle, 2-quit\nFound words: \n"
-exitmesg: .asciiz "Goodbye, thanks for playing!\n"
+exitmesg: .asciiz "\nGoodbye, thanks for playing!\n"
 errormesg: .asciiz "Error: Invalid word.\n"
 usedwordmesg: .asciiz "Error: Word already used.\n"
 wordFoundmesg: .asciiz "Found one!\n"
@@ -18,6 +18,9 @@ reservedspace: .space 2048
 .text
 init:
 	jal loadDictionary # load dictionary
+	li $v0, 30	# fetch the current system time
+	syscall
+	move $s7, $a0	# now $s6 has the low order 32 bits of time in ms, we don't need the upper 32 for realistic game lengths
 main:
 	li $v0, 4
 	la $a0, screenclear	# clear the previous screen
@@ -26,12 +29,12 @@ main:
 	la $a0, commfoundmesg
 	syscall
 	jal printfound	# print the currently found set of words
-	li $v0, 4
-	la $a0, scoremesg
-	syscall
-	li $v0, 1
-	add $a0, $s7, $zero		# assuming score is in $s7
-	syscall		# display the score
+	#li $v0, 4
+	#la $a0, scoremesg
+	#syscall
+	#li $v0, 1
+	#add $a0, $s7, $zero		# assuming score is in $s7
+	#syscall		# display the score
 	li $v0, 4
 	la $a0, board	# print the board
 	syscall
@@ -238,7 +241,7 @@ invalidString:
 	la $a0, errormesg
 	syscall
 	# jr $ra	# ?? option a ??
-	 j main		# ?? option b ??
+	j main		# ?? option b ??
 
 printfound:
 	la $t0, reservedspace # load reserved space string into new
@@ -261,7 +264,21 @@ endFound:
 	jr $ra
 
 exit:
-	li $v0, 4		# if it's not command 2, 'exit', we skip this and go on to the processing
+	li $v0, 30	# fetch the current system time
+	syscall
+	sub $t3, $a0, $s7	# now $t3 will have the time since the round started (in ms) as long as the game takes < ~49 days
+	div $t1, $t3, 60000	# $t1 now has the length of the game in min
+	
+	# get the number of words found into $t0
+	
+	div $s7, $t0, $t1
+	li $v0, 4
+	la $a0, scoremesg
+	syscall
+	li $v0, 1
+	add $a0, $s7, $zero		# assuming score is in $s7
+	syscall		# display the score
+	li $v0, 4
 	la $a0, exitmesg	# say goodbye
 	syscall
 	li $v0, 10
