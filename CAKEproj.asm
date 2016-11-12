@@ -16,8 +16,9 @@ fout: .asciiz "board.txt"
 reservedspace: .space 2048
 
 .text
-main:
+init:
 	jal loadDictionary # load dictionary
+main:
 	li $v0, 4
 	la $a0, screenclear	# clear the previous screen
 	syscall
@@ -200,7 +201,20 @@ processing:
 	add $t3, $zero, 4
 	slt $t1, $t2, $t3
 	beq $t1, 1, invalidString	# if string length is < 4
-	# continue processing
+	# check uses the center letter on the board
+	# check uses only board letters 0 or 1 times each
+	# at any point, if it fails jump or branch to invalidString
+	# check if the word has been used already
+	# if word has already been used
+	li $v0, 4
+	la $a0, usedwordmesg
+	syscall
+	# else, valid word that hasn't already been used
+	# add to list
+	# update score
+	li $v0, 4
+	la $a0, wordFoundmesg
+	syscall
 	
 	j main
 	
@@ -218,34 +232,13 @@ exitStrLen:
 	move $v0, $t0
 	jr $ra
 
-checkInput:
-	# index
-	li $t1, 0
-	# base address for input string
-	la $t2, input
-	# boolean for contains center letter
-	li $t5, 0
-checkInputLoop:
-	# go to next character
-	add $t3, $t2, $t1
-	# load that character
-	lb $t4, ($t3)
-	# If we've hit the end of the string
-	beq $t4, $zero, checkInputExit
-	# call stringLen
-	jal stringLen
-	# increment index
-	add $t1, $t1, 1
-	j checkInputLoop
-checkInputExit:
-
 	
 invalidString:
 	li $v0, 4
 	la $a0, errormesg
 	syscall
-	# jr $ra	# ???
-	# j main	# ???
+	# jr $ra	# ?? option a ??
+	 j main		# ?? option b ??
 
 printfound:
 	la $t0, reservedspace # load reserved space string into new
