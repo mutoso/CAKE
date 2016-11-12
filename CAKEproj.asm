@@ -1,8 +1,8 @@
 .data
 promptmesg: .asciiz "\nEnter a word: "
-scoremesg: .asciiz "Score: "
+scoremesg: .asciiz "\nScore: "
 screenclear: .asciiz "\n\n\n\n\n\n\n\n\n\n\n\n\n"
-commfoundmesg: .asciiz "Commands: 1-shuffle, 2-quit\nFound words: \n"
+commfoundmesg: .asciiz "Commands: 1-shuffle, 2-quit\nFound words: "
 exitmesg: .asciiz "Goodbye, thanks for playing!\n"
 errormesg: .asciiz "Error: Invalid word.\n"
 usedwordmesg: .asciiz "Error: Word already used.\n"
@@ -35,6 +35,9 @@ main:
 	li $v0, 1
 	add $a0, $s7, $zero		# assuming score is in $s7
 	syscall		# display the score
+	li $v0, 4
+	la $a0, newLine
+	syscall
 	li $v0, 4
 	la $a0, board	# print the board
 	syscall
@@ -220,11 +223,6 @@ processing:
 	syscall
 	
 	j main
-	
-printBoard:
-	la $a0, board
- 	li $v0, 4
- 	syscall
 	
 stringLength:
 	add $t0, $t0, $zero	# initialize count to 0
