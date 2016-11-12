@@ -1,9 +1,9 @@
 .data
 promptmesg: .asciiz "\nEnter a word: "
-scoremesg: .asciiz "Score: "
+scoremesg: .asciiz "\nScore: "
 screenclear: .asciiz "\n\n\n\n\n\n\n\n\n\n\n\n\n"
-commfoundmesg: .asciiz "Commands: 1-shuffle, 2-quit\nFound words: \n"
-exitmesg: .asciiz "\nGoodbye, thanks for playing!\n"
+commfoundmesg: .asciiz "Commands: 1-shuffle, 2-quit\nFound words: "
+exitmesg: .asciiz "Goodbye, thanks for playing!\n"
 errormesg: .asciiz "Error: Invalid word.\n"
 usedwordmesg: .asciiz "Error: Word already used.\n"
 wordFoundmesg: .asciiz "Found one!\n"
@@ -11,7 +11,7 @@ commOne: .word 0x31
 commTwo: .word 0x32
 newLine: .word 0x0A
 input: .space 10
-board: .space 19
+board: .asciiz "a b c\nd e f\ng h i\n"
 fout: .asciiz "board.txt"
 reservedspace: .space 2048
 
@@ -25,6 +25,9 @@ main:
 	li $v0, 4
 	la $a0, screenclear	# clear the previous screen
 	syscall
+	la $a0, board
+ 	li $v0, 4
+ 	syscall
 	li $v0, 4
 	la $a0, commfoundmesg
 	syscall
@@ -35,6 +38,9 @@ main:
 	#li $v0, 1
 	#add $a0, $s7, $zero		# assuming score is in $s7
 	#syscall		# display the score
+	li $v0, 4
+	la $a0, newLine
+	syscall
 	li $v0, 4
 	la $a0, board	# print the board
 	syscall
