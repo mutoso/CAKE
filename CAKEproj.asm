@@ -233,7 +233,7 @@ checkInputLoop:
 	# If we've hit the end of the string
 	beq $t4, $zero, checkInputExit
 	# call stringLen
-	jal stringLen
+	jal stringLength
 	# increment index
 	add $t1, $t1, 1
 	j checkInputLoop
