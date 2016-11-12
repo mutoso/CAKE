@@ -42,9 +42,6 @@ main:
 	la $a0, newLine
 	syscall
 	li $v0, 4
-	la $a0, board	# print the board
-	syscall
-	li $v0, 4
 	la $a0, promptmesg
 	syscall
 	li $v0, 8	# get the input
