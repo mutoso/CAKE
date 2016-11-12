@@ -11,7 +11,7 @@ commOne: .word 0x31
 commTwo: .word 0x32
 newLine: .word 0x0A
 input: .space 10
-board: .space 19
+board: .asciiz "a b c\nd e f\ng h i\n"
 fout: .asciiz "board.txt"
 reservedspace: .space 2048
 
@@ -22,6 +22,9 @@ main:
 	li $v0, 4
 	la $a0, screenclear	# clear the previous screen
 	syscall
+	la $a0, board
+ 	li $v0, 4
+ 	syscall
 	li $v0, 4
 	la $a0, commfoundmesg
 	syscall
@@ -217,6 +220,11 @@ processing:
 	syscall
 	
 	j main
+	
+printBoard:
+	la $a0, board
+ 	li $v0, 4
+ 	syscall
 	
 stringLength:
 	add $t0, $t0, $zero	# initialize count to 0
