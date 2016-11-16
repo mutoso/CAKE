@@ -7,11 +7,14 @@ exitmesg: .asciiz "Goodbye, thanks for playing!\n"
 errormesg: .asciiz "Error: Invalid word.\n"
 usedwordmesg: .asciiz "Error: Word already used.\n"
 wordFoundmesg: .asciiz "Found one!\n"
+notContain: .asciiz "The input is not contained in the board.\n"
+contain: .asciiz "The input is contained in the board. \n"
 commOne: .word 0x31
 commTwo: .word 0x32
 newLine: .word 0x0A
 input: .space 10
 board: .asciiz "a b c\nd e f\ng h i\n"
+boardP: .asciiz "a b c\nd e f\ng h i\n" #for use in processing need to figure out how to copy array in mem for manipulation
 fout: .asciiz "board.txt"
 reservedspace: .space 2048
 
@@ -48,6 +51,7 @@ main:
 	la $a0, input
 	li $a1, 10
 	syscall
+
 	lb $t1, 0($a0)	# get first char into $t1
 	lw $t2, commOne
 	beq $t1, $t2, shuffle	# if command 1
@@ -85,7 +89,7 @@ loadDictionary:
     syscall
     
     jr $ra
-
+    
 shuffle:
 
 	addi $s0, $s0, 1
@@ -210,6 +214,8 @@ processing:
 	# check uses the center letter on the board
 	# check uses only board letters 0 or 1 times each
 	# at any point, if it fails jump or branch to invalidString
+	# check if word is contained in board (includes checking for duplicate letters)
+	jal contains
 	# check if the word has been used already
 	# if word has already been used
 	li $v0, 4
@@ -224,6 +230,58 @@ processing:
 	
 	j main
 	
+contains:
+	#Load addresses into registers
+	la $t1, boardP
+	la $t2, input	
+	
+	li $t0, 1
+	lb $t5, newLine
+loadInputs:	
+	#Load first character into registers
+	lb $t3, ($t1)
+	lb $t4, ($t2)
+
+	#if end of input or board exit
+	beqz $t3, notContained
+	beq $t4, $t5, contained
+	
+	#if input char is contained in board move, to next input char
+	beq $t4, $t3, inputNext
+	
+	#otherwise go to next board char
+	j boardNext
+	
+boardNext:
+	#increase board address to next character
+	addi $t1, $t1, 2	
+	j loadInputs
+
+inputNext:
+	#remove byte and increase input address to next character
+	sb $t0, ($t1)
+	addi $t2, $t2, 1
+	
+	#reset board address
+	la $t1, boardP
+	j loadInputs
+	
+notContained:
+	#display notContains message
+	li $v0, 4
+	la $a0, notContain
+	syscall
+	j invalidString
+contained:
+	#display contains message
+	li $v0, 4
+	la $a0, contain
+	syscall
+	j containExit
+containExit:
+	jr $ra
+
+
 stringLength:
 	add $t0, $t0, $zero	# initialize count to 0
 strLenLoop:
