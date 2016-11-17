@@ -14,7 +14,7 @@ commTwo: .word 0x32
 newLine: .word 0x0A
 input: .space 10
 board: .asciiz "a b c\nd e f\ng h i\n"
-boardP: .asciiz "a b c\nd e f\ng h i\n" #for use in processing need to figure out how to copy array in mem for manipulation
+boardP: .space 19
 fout: .asciiz "board.txt"
 reservedspace: .space 2048
 
@@ -215,6 +215,7 @@ processing:
 	# check uses only board letters 0 or 1 times each
 	# at any point, if it fails jump or branch to invalidString
 	# check if word is contained in board (includes checking for duplicate letters)
+	jal copyBoard
 	jal contains
 	# check if the word has been used already
 	# if word has already been used
@@ -230,6 +231,24 @@ processing:
 	
 	j main
 	
+copyBoard:
+	la $t1, board
+	la $t2, boardP
+	
+transfer:
+	lb $t3, ($t1)
+	sb $t3, ($t2)
+	
+	#Move  to next board character
+	addi $t1, $t1, 2
+	addi $t2, $t2, 1
+	
+	beqz $t3, copyExit
+	j transfer
+	
+copyExit:
+	jr $ra
+
 contains:
 	#Load addresses into registers
 	la $t1, boardP
@@ -254,7 +273,7 @@ loadInputs:
 	
 boardNext:
 	#increase board address to next character
-	addi $t1, $t1, 2	
+	addi $t1, $t1, 1	
 	j loadInputs
 
 inputNext:
