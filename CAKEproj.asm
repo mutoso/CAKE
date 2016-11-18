@@ -47,6 +47,7 @@ main:
 	li $v0, 4
 	la $a0, promptmesg
 	syscall
+getInput:
 	li $v0, 8	# get the input
 	la $a0, input
 	li $a1, 10
