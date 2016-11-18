@@ -212,19 +212,28 @@ processing:
 	add $t3, $zero, 4
 	slt $t1, $t2, $t3
 	beq $t1, 1, invalidString	# if string length is < 4
-	# check uses the center letter on the board
+		# check uses the center letter on the board
+	la $t2, board
+	addu $t2, $t2, 8	# center at index 8
+	lbu $t1, $t2	# put the center letter into $t1
+	
 	# check uses only board letters 0 or 1 times each
 	# at any point, if it fails jump or branch to invalidString
 	# check if word is contained in board (includes checking for duplicate letters)
 	jal copyBoard
 	jal contains
 	# check if the word has been used already
-	# if word has already been used
+	la $a0, input
+	jal checkDict
+		# v0 will contain a 0 if not in the dictionary, a 1 if it's a valid new word, and a 2 if
+			# it's a valid word that's already been used
+	beqz $v0, invalidString
+	bne $v0, 1, validWord
 	li $v0, 4
-	la $a0, usedwordmesg
+	la $a0, usedwordmesg	# if word has already been used
 	syscall
-	# else, valid word that hasn't already been used
-	# add to list
+validWord:	# else, valid word that hasn't already been used
+	# update as found
 	# update score
 	li $v0, 4
 	la $a0, wordFoundmesg
@@ -299,6 +308,37 @@ contained:
 	syscall
 	j containExit
 containExit:
+	jr $ra
+	
+
+checkDict:	# use lb to iterate over the word vs the word in the dictionary
+	# address of input word is in $a0
+	la $t0, reservedspace	# put address of dictionary into $t0
+dictLoop:
+	# lb for letter
+	lb $t5, ($t0)
+		# if first char is f
+	addi $v0, $zero, 2
+	j closeDict
+	add $t1, $t0, $zero	# put offset of dictionary address into $t1
+	add $t1, $t1, 1
+	add $t2, $a0, $zero	# put offset of input address into $t2
+		# else if first char is .
+	add $v0, $zero, $zero
+	j dictChecking
+		# else
+	addi $v0, $zero, 1
+dictChecking:
+	lb $t3, ($t1)
+	lb $t4, ($t2)
+	bne $t3, $t4, nonmatch	# if they match, increment offsets and check next
+	addu $t1, $t1, 1
+	addu $t2, $t2, 1
+	j dictChecking
+nonmatch:	# if they don't
+	addu $t0, $t0, 10
+	j dictLoop
+closeDict:
 	jr $ra
 
 
