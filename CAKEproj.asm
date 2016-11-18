@@ -329,7 +329,7 @@ printfound:
 
 foundLoop:
 	lb   $t1, 0($t0)
-	beq  $t1, $zero endFound
+	beq  $t1, $zero, endFound
 
 	addi $t0, $t0, 1
 	j foundLoop
