@@ -9,8 +9,11 @@ usedwordmesg: .asciiz "Error: Word already used.\n"
 wordFoundmesg: .asciiz "Found one!\n"
 notContain: .asciiz "The input is not contained in the board.\n"
 contain: .asciiz "The input is contained in the board. \n"
-commOne: .word 0x31
-commTwo: .word 0x32
+commOne: .word 0x31			# a 1 in ascii hex
+commTwo: .word 0x32			# a 2 in ascii hex
+unusedMark: .word 0x2E		# a . in ascii hex
+#usedMark: .word 0x2A		# a * in ascii hex
+endDictMark: .word 0x66		# an f in ascii hex
 newLine: .word 0x0A
 input: .space 10
 board: .asciiz "a b c\nd e f\ng h i\n"
@@ -315,18 +318,22 @@ checkDict:	# use lb to iterate over the word vs the word in the dictionary
 	# address of input word is in $a0
 	la $t0, reservedspace	# put address of dictionary into $t0
 dictLoop:
+	add $t6, $zero, $zero
 	# lb for letter
 	lb $t5, ($t0)
-		# if first char is f
+	lw $t3, endDictMark
+	bne $t5, $t3 inDict	# if first char is f
 	addi $v0, $zero, 2
 	j closeDict
+inDict:
 	add $t1, $t0, $zero	# put offset of dictionary address into $t1
 	add $t1, $t1, 1
 	add $t2, $a0, $zero	# put offset of input address into $t2
-		# else if first char is .
+	lw $t3, unusedMark
+	bne $t3, $t5, dictElse	# else if first char is .
 	add $v0, $zero, $zero
 	j dictChecking
-		# else
+dictElse:
 	addi $v0, $zero, 1
 dictChecking:
 	lb $t3, ($t1)
@@ -334,6 +341,8 @@ dictChecking:
 	bne $t3, $t4, nonmatch	# if they match, increment offsets and check next
 	addu $t1, $t1, 1
 	addu $t2, $t2, 1
+	addu $t6, $t6, 1
+	beq $t6, 9, closeDict
 	j dictChecking
 nonmatch:	# if they don't
 	addu $t0, $t0, 10
