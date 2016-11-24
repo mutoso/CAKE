@@ -210,21 +210,23 @@ shuffleExit:
 
 processing:
 	# process the user input
+	jal copyBoard
 	jal stringLength
-	move $t2, $v0
-	add $t3, $zero, 4
-	slt $t1, $t2, $t3
-	beq $t1, 1, invalidString	# if string length is < 4
-		# check uses the center letter on the board
-	la $t2, board
-	addu $t2, $t2, 8	# center at index 8
-	lbu $t1, $t2	# put the center letter into $t1
+	#jal containsCenter
+	jal contains
+	
+	# check if the word has been used already
+	# if word has already been used
+	# else, valid word that hasn't already been used
+	# add to list
+	# update score
+	#j main
 	
 	# check uses only board letters 0 or 1 times each
 	# at any point, if it fails jump or branch to invalidString
 	# check if word is contained in board (includes checking for duplicate letters)
-	jal copyBoard
-	jal contains
+
+dictionary:
 	# check if the word has been used already
 	la $a0, input
 	jal checkDict
@@ -313,7 +315,42 @@ contained:
 containExit:
 	jr $ra
 	
+containsCenter:
+	#Load addresses into registers, and load center character
+	la $t1, boardP
+	la $t2, input
+	lb $t3, 8($t1)
+	lb $t5, newLine
+getMid:
+	#Load input character into register
+	lb $t4, ($t2)
+	
+	#branch statements
+	beq $t3, $t4, containsMid
+	beq $t4, $t5, invalidCenter	
+	
+	#continue to next input character
+	j nextMid
+	
+nextMid:
+	#Increment to next input character
+	addi $t2, $t2, 1 
+	j getMid
+	
+invalidCenter:
+	#Display message and jump to invalid string
+	li $v0, 4
+	la $a0, noMid
+	syscall	
+	j invalidString
 
+containsMid:
+	#display input and return to processing
+	li $v0, 4
+	la $a0, yesMid
+	syscall
+	jr $ra
+	
 checkDict:	# use lb to iterate over the word vs the word in the dictionary
 	# address of input word is in $a0
 	la $t0, reservedspace	# put address of dictionary into $t0
