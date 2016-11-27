@@ -8,6 +8,8 @@ errormesg: .asciiz "Error: Invalid word.\n"
 usedwordmesg: .asciiz "Error: Word already used.\n"
 wordFoundmesg: .asciiz "Found one!\n"
 notContain: .asciiz "The input is not contained in the board.\n"
+noMid: .asciiz "No middle used in word.\n"
+yesMid: .asciiz "Middle used in word.\n"
 contain: .asciiz "The input is contained in the board. \n"
 commOne: .word 0x31			# a 1 in ascii hex
 commTwo: .word 0x32			# a 2 in ascii hex
