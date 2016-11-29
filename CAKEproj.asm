@@ -97,7 +97,7 @@ loadDictionary:
     jr $ra
     
 shuffle:
-
+	# Initialize shuffle counter to 0
 	addi $s0, $s0, 1
 	#Generate Random Number between 0-3
 	li $a1, 3
@@ -208,6 +208,7 @@ shuffle4:
     j shuffle
 
 shuffleExit:
+	add $s0, $zero, $zero
 	j main
 
 processing:
