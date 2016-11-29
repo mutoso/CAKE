@@ -16,6 +16,7 @@ commOne: .word 0x31			# a 1 in ascii hex
 commTwo: .word 0x32			# a 2 in ascii hex
 unusedMark: .word 0x2E		# a . in ascii hex
 #usedMark: .word 0x2A		# a * in ascii hex
+usedMark .byte '*'
 endDictMark: .word 0x66		# an f in ascii hex
 newLine: .word 0x0A
 input: .space 10
@@ -235,6 +236,7 @@ processing:
 dictionary:
 	# check if the word has been used already
 	la $a0, input
+	
 	jal checkDict
 		# v0 will contain a 0 if not in the dictionary, a 1 if it's a valid new word, and a 2 if
 			# it's a valid word that's already been used
@@ -391,6 +393,10 @@ nonmatch:	# if they don't
 	addu $t0, $t0, 10
 	j dictLoop
 closeDict:
+	bne $v0, 1, dictDone
+	lb $t1, usedMark
+	sb $t1, ($t0)
+dictDone:
 	jr $ra
 
 
