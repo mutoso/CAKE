@@ -16,7 +16,7 @@ commOne: .word 0x31			# a 1 in ascii hex
 commTwo: .word 0x32			# a 2 in ascii hex
 unusedMark: .word 0x2E		# a . in ascii hex
 #usedMark: .word 0x2A		# a * in ascii hex
-usedMark .byte '*'
+usedMark: .ascii "*"
 endDictMark: .word 0x66		# an f in ascii hex
 newLine: .word 0x0A
 input: .space 10
