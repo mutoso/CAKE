@@ -23,7 +23,7 @@ input: .space 10
 board: .asciiz "a b c\nd e f\ng h i\n"
 boardP: .space 19
 fout: .asciiz "board.txt"
-reservedspace: .space 2048
+reservedspace: .byte 0:1024
 
 .text
 init:
@@ -70,35 +70,31 @@ getInput:
 	j exit		# if command 2, exit program
 	
 loadDictionary:
-	# open file syscall
-    li $v0, 13
-    # load filename
-    la $a0, fout
-    # open for reading
-    li $a1, 0
-    # mode is ignored
-    li $a2, 0
-    syscall
+	li $v0, 13     # open file syscall num
+	la $a0, fout   # load filename
+	li $a1, 0	# open for reading
+       li $a2, 0       # mode is ignored
+       syscall
     
-    move $s6, $v0
+       move $s6, $v0      # move file descriptor to $s6
 
-    li $v0, 14
-    move $a0, $s6
-    la $a1, reservedspace
-    li $a2, 1024
-    syscall
+       li $v0, 14
+       move $a0, $s6
+       la $a1, reservedspace
+       li $a2, 1024
+       syscall
     
-    # prints results of file
-    la $a0, reservedspace
-    li  $v0, 4
-    syscall
+       # prints results of file
+       la $a0, reservedspace
+       li  $v0, 4
+       syscall
     
-    close:
-    li $v0, 16
-    move $a0, $s6
-    syscall
+close:
+       li $v0, 16      # close file
+       move $a0, $s6
+       syscall
     
-    jr $ra
+       jr $ra
     
 shuffle:
 	# Initialize shuffle counter to 0
