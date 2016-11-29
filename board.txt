@@ -76,4 +76,8 @@ oendsisgm
 .songs    
 .sons     
 .blahs
+<<<<<<< HEAD
 |
+=======
+|
+>>>>>>> origin/master
