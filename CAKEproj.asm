@@ -6,6 +6,7 @@ commfoundmesg: .asciiz "Commands: 1-shuffle, 2-quit\nFound words: "
 exitmesg: .asciiz "\nGoodbye, thanks for playing!\n"
 errormesg: .asciiz "Error: Invalid word.\n"
 usedwordmesg: .asciiz "Error: Word already used.\n"
+notLong: .asciiz "Word less that 4 letters.\n"
 wordFoundmesg: .asciiz "Found one!\n"
 notContain: .asciiz "The input is not contained in the board.\n"
 noMid: .asciiz "No middle used in word.\n"
@@ -217,7 +218,7 @@ processing:
 	# process the user input
 	jal copyBoard
 	jal stringLength
-	#jal containsCenter
+	jal containsCenter
 	jal contains
 	
 	# check if the word has been used already
@@ -225,12 +226,12 @@ processing:
 	# else, valid word that hasn't already been used
 	# add to list
 	# update score
-	#j main
+	j main
 	
 	# check uses only board letters 0 or 1 times each
 	# at any point, if it fails jump or branch to invalidString
 	# check if word is contained in board (includes checking for duplicate letters)
-
+	
 dictionary:
 	# check if the word has been used already
 	la $a0, input
@@ -394,20 +395,30 @@ closeDict:
 
 
 stringLength:
-	add $t0, $t0, $zero	# initialize count to 0
+	#initialize counter
+	li $t0, 0
+	la $t5, input
+	
 strLenLoop:
-	lb $t1, 0($a0) # load a character into t1
+	lb $t1, ($t5) # load a character into t1
 	lw $t2, newLine
 	beq $t1, $t2, exitStrLen	# exit the loop if we have a newLine character
-	beq $t1, $zero exitStrLen	# exit the loop if we have a null character
-	addi $a0, $a0, 1 #load increment string pointer
+	addi $t5, $t5, 1 #load increment string pointer
 	addi $t0, $t0, 1 #increment count
 	j strLenLoop
+	
 exitStrLen:
-	move $v0, $t0
+	slti $t1,$t0, 4
+	move $s3, $t0
+	beq $t1, 1, invalidLength
 	jr $ra
 
+invalidLength:
+	li $v0, 4
+	la $a0, notLong
+	syscall
 	
+
 invalidString:
 	li $v0, 4
 	la $a0, errormesg
