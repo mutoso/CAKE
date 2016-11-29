@@ -322,7 +322,7 @@ containsCenter:
 	#Load addresses into registers, and load center character
 	la $t1, boardP
 	la $t2, input
-	lb $t3, 8($t1)
+	lb $t3, 4($t1)
 	lb $t5, newLine
 getMid:
 	#Load input character into register
