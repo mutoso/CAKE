@@ -21,9 +21,9 @@ endDictMark: .word 0x66		# an f in ascii hex
 newLine: .word 0x0A
 input: .space 10
 board: .asciiz "a b c\nd e f\ng h i\n"
-boardP: .space 19
+boardP: .space 20
 fout: .asciiz "board.txt"
-reservedspace: .space 2048
+reservedspace: .byte 0:1024
 
 .text
 init:
@@ -70,35 +70,31 @@ getInput:
 	j exit		# if command 2, exit program
 	
 loadDictionary:
-	# open file syscall
-    li $v0, 13
-    # load filename
-    la $a0, fout
-    # open for reading
-    li $a1, 0
-    # mode is ignored
-    li $a2, 0
-    syscall
+	li $v0, 13     # open file syscall num
+	la $a0, fout   # load filename
+	li $a1, 0	# open for reading
+       li $a2, 0       # mode is ignored
+       syscall
     
-    move $s6, $v0
+       move $s6, $v0      # move file descriptor to $s6
 
-    li $v0, 14
-    move $a0, $s6
-    la $a1, reservedspace
-    li $a2, 1024
-    syscall
+       li $v0, 14
+       move $a0, $s6
+       la $a1, reservedspace
+       li $a2, 1024
+       syscall
     
-    # prints results of file
-    la $a0, reservedspace
-    li  $v0, 4
-    syscall
+       # prints results of file
+       la $a0, reservedspace
+       li  $v0, 4
+       syscall
     
-    close:
-    li $v0, 16
-    move $a0, $s6
-    syscall
+close:
+       li $v0, 16      # close file
+       move $a0, $s6
+       syscall
     
-    jr $ra
+       jr $ra
     
 shuffle:
 	# Initialize shuffle counter to 0
@@ -277,6 +273,7 @@ contains:
 	la $t1, boardP
 	la $t2, input	
 	
+	li $t6, 0
 	li $t0, 1
 	lb $t5, newLine
 loadInputs:	
@@ -285,8 +282,9 @@ loadInputs:
 	lb $t4, ($t2)
 
 	#if end of input or board exit
-	beqz $t3, notContained
 	beq $t4, $t5, contained
+	beq $t6, $s3, contained
+	beqz $t3, notContained
 	
 	#if input char is contained in board move, to next input char
 	beq $t4, $t3, inputNext
@@ -303,7 +301,7 @@ inputNext:
 	#remove byte and increase input address to next character
 	sb $t0, ($t1)
 	addi $t2, $t2, 1
-	
+	addi $t6, $t6, 1
 	#reset board address
 	la $t1, boardP
 	j loadInputs
@@ -408,6 +406,7 @@ stringLength:
 strLenLoop:
 	lb $t1, ($t5) # load a character into t1
 	lw $t2, newLine
+	beqz $t1, exitStrLen
 	beq $t1, $t2, exitStrLen	# exit the loop if we have a newLine character
 	addi $t5, $t5, 1 #load increment string pointer
 	addi $t0, $t0, 1 #increment count
