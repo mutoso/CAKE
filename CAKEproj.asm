@@ -432,23 +432,39 @@ invalidString:
 	j main		# ?? option b ??
 
 printfound:
-	la $t0, reservedspace # load reserved space string into new
+	la $t0, reservedspace # load reserved space string address into $t0
+	addi $t4, $zero, 0x2A # * char
+	addi $t6, $zero, 0x7C # | char
 
 foundLoop:
 	lb   $t1, 0($t0)
-	beq  $t1, $zero, endFound
-
+	beq $t1, $t6, endFound # branch if $t1 is | indicating end of file
+	bne $t1, $t4, notUsed # branch if $t1 is not equal to *
+	
+	addi $t0, $t0, 1
+	lb $t1, 0($t0)
+printWord:	 # print characters until new line reached
+	li $v0, 11
+	la $a0, ($t1)
+	syscall
+	
+	addi $t0, $t0, 1
+	lb $t1, 0($t0)
+	lb $t5, newLine
+	bne $t1, $t5, printWord
+	# print space separating words
+	addi $t1, $zero, 0x20
+	li $v0, 11
+	la $a0, ($t1)
+	syscall
+	
+	j foundLoop
+	
+notUsed:
 	addi $t0, $t0, 1
 	j foundLoop
 
 endFound:
-	la $t1 reservedspace
-	sub $t3, $t0, $t1 #$t3 now contains the length of the string
-	
-	li $v0, 1
-	la $a0, ($t3)	# print the length of reservedspace
-	syscall
-	
 	jr $ra
 
 exit:
