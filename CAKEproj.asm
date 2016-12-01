@@ -438,14 +438,14 @@ foundLoop:
 	
 	addi $t0, $t0, 1
 	lb $t1, 0($t0)
-printWord:	 # print characters until new line reached
+printWord:	 # print characters until space reached
 	li $v0, 11
 	la $a0, ($t1)
 	syscall
 	
 	addi $t0, $t0, 1
 	lb $t1, 0($t0)
-	lb $t5, newLine
+	addi $t5, $zero, 0x20
 	bne $t1, $t5, printWord
 	# print space separating words
 	addi $t1, $zero, 0x20
