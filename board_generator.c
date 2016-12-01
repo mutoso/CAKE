@@ -56,7 +56,6 @@ int main()
 	for (i = 0; i < 9; i++)
 	{
 		lines[i] = rand() % line_count;
-		//printf("%d\n", lines[i]);
 	}
 
 	// for each of the nine characters
@@ -92,7 +91,6 @@ int main()
 			}
 		}
 		line[strlen(line)-1] = '\0';
-		//printf("%s\n", line);
 		board[i] = letter;
 		/* go back to the beginning of file */
 		fseek(file, 0, SEEK_SET);
@@ -107,22 +105,28 @@ int main()
 		}
 	}
 
-	puts(unique_board_letters);
 	char pattern[100] = {'\0'};
 	strcat(pattern, "^[");
 	strcat(pattern, unique_board_letters);
 	strcat(pattern, "]+$");
-	printf("%s\n", pattern);
+
 
 	regex_t regex;
 	int rc = regcomp(&regex, pattern, REG_EXTENDED);
-	if (rc != 0) {
+	if (rc != 0)
+    {
 	    fprintf(stderr, "Failed to compile regex\n");
 	    return 1;
 	}
 
 	/* go back to the beginning of file */
 	fseek(file, 0, SEEK_SET);
+
+	// open board.txt
+	FILE* output = fopen("board.txt", "w");
+
+	// print formatted board
+	fprintf(output, "%c %c %c\n%c %c %c\n%c %c %c\n\n", board[0], board[1], board[2], board[3], board[4], board[5], board[6], board[7], board[8]);
 
 	/* for each line*/
 	while (fgets(line, sizeof(line), file))
@@ -136,7 +140,11 @@ int main()
 		rc = regexec(&regex, line, 0, NULL, 0);
 		if (rc == 0 && strlen(line) >= 4)
 		{
-			puts(line);
+			fprintf(output, ".%-9s\n", line);
 		}
 	}
+
+	// print ending character
+	fprintf(output, "|\n");
+	printf("Successfully wrote to board.txt\n");
 }
