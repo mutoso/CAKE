@@ -3,6 +3,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdbool.h>
+#include <regex.h>
 
 bool contains_letter_twice(char* string, char letter)
 {
@@ -16,6 +17,20 @@ bool contains_letter_twice(char* string, char letter)
 	}
 	return count > 2;
 }
+
+bool contains_letter(char* string, char letter)
+{
+	int count = 0;
+	for (size_t i = 0; i < strlen(string); i++)
+	{
+		if (string[i] == letter)
+		{
+			count++;
+		}
+	}
+	return count != 0;
+}
+
 
 int main()
 {
@@ -33,7 +48,7 @@ int main()
 		line_count++;
 	}
 
-	/* go back to the beginning of file*/
+	/* go back to the beginning of file */
 	fseek(file, 0, SEEK_SET);
 
 	/* get random lines*/
@@ -79,8 +94,49 @@ int main()
 		line[strlen(line)-1] = '\0';
 		//printf("%s\n", line);
 		board[i] = letter;
-		/* go back to the beginning of file*/
+		/* go back to the beginning of file */
 		fseek(file, 0, SEEK_SET);
 	}
-	printf("%s", board);
+
+	char unique_board_letters[100] = {'\0'};
+	for (size_t i = 0; i < strlen(board); i++)
+	{
+		if (!contains_letter(unique_board_letters, board[i]))
+		{
+			sprintf(unique_board_letters, "%s%c", unique_board_letters, board[i]);
+		}
+	}
+
+	puts(unique_board_letters);
+	char pattern[100] = {'\0'};
+	strcat(pattern, "^[");
+	strcat(pattern, unique_board_letters);
+	strcat(pattern, "]+$");
+	printf("%s\n", pattern);
+
+	regex_t regex;
+	int rc = regcomp(&regex, pattern, REG_EXTENDED);
+	if (rc != 0) {
+	    fprintf(stderr, "Failed to compile regex\n");
+	    return 1;
+	}
+
+	/* go back to the beginning of file */
+	fseek(file, 0, SEEK_SET);
+
+	/* for each line*/
+	while (fgets(line, sizeof(line), file))
+	{
+		// remove newline at end of line
+		if (line[strlen(line)-1] == '\n')
+		{
+			line[strlen(line)-1] = '\0';
+		}
+
+		rc = regexec(&regex, line, 0, NULL, 0);
+		if (rc == 0 && strlen(line) >= 4)
+		{
+			puts(line);
+		}
+	}
 }
