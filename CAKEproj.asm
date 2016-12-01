@@ -84,11 +84,6 @@ loadDictionary:
        li $a2, 1024
        syscall
     
-       # prints results of file
-       la $a0, reservedspace
-       li  $v0, 4
-       syscall
-    
 close:
        li $v0, 16      # close file
        move $a0, $s6
