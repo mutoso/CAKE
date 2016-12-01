@@ -23,7 +23,7 @@ input: .space 10
 board: .asciiz "a b c\nd e f\ng h i\n"
 boardP: .space 20
 fout: .asciiz "board.txt"
-reservedspace: .byte 0:4096
+reservedspace: .byte 0:1024
 
 .text
 init:
@@ -32,16 +32,17 @@ init:
 	syscall
 	move $s7, $a0	# now $s6 has the low order 32 bits of time in ms, we don't need the upper 32 for realistic game lengths
 main:
-	la $a0, reservedspace
+	la $a0, board
  	li $v0, 4
  	syscall
 	li $v0, 4
 	la $a0, commfoundmesg
 	syscall
 	jal printfound	# print the currently found set of words
-	#li $v0, 4
-	#la $a0, scoremesg
-	#syscall
+	li $v0, 4
+	la $a0, scoremesg
+	syscall
+	jal printScore   # print score
 	#li $v0, 1
 	#add $a0, $s7, $zero		# assuming score is in $s7
 	#syscall		# display the score
@@ -83,13 +84,7 @@ loadDictionary:
        la $a1, reservedspace
        li $a2, 1024
        syscall
-       
-       # separate board from wordlist
-       la $t1, reservedspace
-       addi $t1, $t1, 18
-       li $t2, '\0'
-       sb $t2, ($t1)
-       
+    
 close:
        li $v0, 16      # close file
        move $a0, $s6
@@ -118,7 +113,7 @@ shuffle:
  
 shuffle1:
 	#Load board into registers
- 	la $t4, reservedspace
+ 	la $t4, board
  	lb $t0, 0($t4)
  	lb $t1, 2($t4)
  	lb $t2, 4($t4)
@@ -137,11 +132,11 @@ shuffle1:
  	sb $t6, 4($t4)
  	sb $t7, 2($t4)
  	sb $t8, 0($t4)
-        j shuffle
+    j shuffle
  
 shuffle2:
 	#Load board into registers
- 	la $t4, reservedspace
+ 	la $t4, board
  	lb $t0, 0($t4)
  	lb $t1, 2($t4)
  	lb $t2, 4($t4)
@@ -164,7 +159,7 @@ shuffle2:
  
 shuffle3:
 	#Load board into registers
- 	la $t4, reservedspace
+ 	la $t4, board
  	lb $t0, 0($t4)
  	lb $t1, 2($t4)
  	lb $t2, 4($t4)
@@ -187,7 +182,7 @@ shuffle3:
  
 shuffle4:
 	#Load board into registers
- 	la $t4, reservedspace
+ 	la $t4, board
  	lb $t0, 0($t4)
  	lb $t1, 2($t4)
  	lb $t2, 4($t4)
@@ -252,7 +247,7 @@ validWord:	# else, valid word that hasn't already been used
 	j main
 	
 copyBoard:
-	la $t1, reservedspace
+	la $t1, board
 	la $t2, boardP
 	
 transfer:
@@ -434,7 +429,6 @@ invalidString:
 
 printfound:
 	la $t0, reservedspace # load reserved space string address into $t0
-	addi $t0, $t0, 18
 	addi $t4, $zero, 0x2A # * char
 	addi $t6, $zero, 0x7C # | char
 
@@ -487,8 +481,8 @@ notFoundWord:
 endCount:
 	add $a0, $t2, $zero
 	jr $ra
-
-exit:
+	
+printScore:
 	li $v0, 30	# fetch the current system time
 	syscall
 	sub $t3, $a0, $s7	# now $t3 will have the time since the round started (in ms) as long as the game takes < ~49 days
@@ -499,18 +493,28 @@ exit:
 	div.s $f0, $f1, $f2 # f0 now has length of game in min
 	
 	# get the number of words found into $t0
+	addiu $sp, $sp, -4 # make room on the stack    
+	sw $ra, ($sp) # save the current return address on the stack
 	jal numberOfFound
+	lw $ra, ($sp) # get the saved return address from the stack
+	addiu $sp, $sp, 4 # add 4 to stack point
 	
 	mtc1 $a0, $f1
 	div.s $f2, $f1, $f0
-	li $v0, 4
-	la $a0, scoremesg
-	syscall
+	
 	li $v0, 1
 	mfc1 $t0, $f2
 	add $a0, $t0, $zero		# assuming score is in $t0
 	syscall		# display the score
 	li $v0, 4
+	
+	jr $ra
+	
+exit:
+	li $v0, 4
+	la $a0, scoremesg
+	syscall 		# print score message
+	jal printScore
 	la $a0, exitmesg	# say goodbye
 	syscall
 	li $v0, 10
