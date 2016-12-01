@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <regex.h>
+#include <ctype.h>
 
 bool contains_letter_twice(char* string, char letter)
 {
@@ -34,13 +35,15 @@ bool contains_letter(char* string, char letter)
 
 int main()
 {
+restart:
+	;
 	FILE* file = fopen("dictionary.txt", "r");
 	if (!file)
 	{
 		fprintf(stderr, "Cannot open dictionary.txt\n");
 		return 1;
 	}
-	
+
 	char line[10] = {'\0'};
 
 	int lines[9];
@@ -102,6 +105,15 @@ int main()
 		board[i] = letter;
 		/* go back to the beginning of file */
 		fseek(file, 0, SEEK_SET);
+	}
+	
+	// invalid board check
+	for (int i = 0; i < 9; i++)
+	{
+		if (!isalpha(board[i]))
+		{
+			goto restart;
+		}
 	}
 
 	char unique_board_letters[100] = {'\0'};
