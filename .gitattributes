@@ -1,4 +1,5 @@
 # Auto detect text files and perform LF normalization
-* text=auto
+* text=lf # or = auto maybe
 
-*.txt  diff=astextplain
+# declare file that will have lf line endings
+*.txt text eol = lf
