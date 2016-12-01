@@ -82,7 +82,7 @@ loadDictionary:
        li $v0, 14
        move $a0, $s6
        la $a1, reservedspace
-       li $a2, 1024
+       li $a2, 4096
        syscall
        
        # separate board from wordlist
@@ -359,45 +359,47 @@ containsMid:
 	syscall
 	jr $ra
 	
-checkDict:	# use lb to iterate over the word vs the word in the dictionary
-	# address of input word is in $a0
-	la $t0, reservedspace	# put address of dictionary into $t0
+checkDict:           # use lb to iterate over the word vs the word in the dictionary
+                # address of input word is in $a0
+                la $t0, reservedspace     # put address of dictionary into $t0
+                addu $t0, $t0, 18              #put in offset for the board
 dictLoop:
-	add $t6, $zero, $zero
-	# lb for letter
-	lb $t5, ($t0)
-	lw $t3, endDictMark
-	bne $t5, $t3 inDict	# if first char is f
-	addi $v0, $zero, 2
-	j closeDict
+                add $t6, $zero, $zero
+                # lb for letter
+                lb $t5, ($t0)
+                lw $t3, endDictMark
+                bne $t5, $t3 inDict           # if first char is f
+                addi $v0, $zero, 2
+                j closeDict
 inDict:
-	add $t1, $t0, $zero	# put offset of dictionary address into $t1
-	add $t1, $t1, 1
-	add $t2, $a0, $zero	# put offset of input address into $t2
-	lw $t3, unusedMark
-	bne $t3, $t5, dictElse	# else if first char is .
-	add $v0, $zero, $zero
-	j dictChecking
+                add $t1, $t0, $zero          # put offset of dictionary address into $t1
+                add $t1, $t1, 1
+                add $t2, $a0, $zero         # put offset of input address into $t2
+                lw $t3, unusedMark
+                bne $t3, $t5, dictElse      # else if first char is .
+                add $v0, $zero, $zero
+                j dictChecking
 dictElse:
-	addi $v0, $zero, 1
+                addi $v0, $zero, 1
 dictChecking:
-	lb $t3, ($t1)
-	lb $t4, ($t2)
-	bne $t3, $t4, nonmatch	# if they match, increment offsets and check next
-	addu $t1, $t1, 1
-	addu $t2, $t2, 1
-	addu $t6, $t6, 1
-	beq $t6, 9, closeDict
-	j dictChecking
-nonmatch:	# if they don't
-	addu $t0, $t0, 10
-	j dictLoop
+                lb $t3, ($t1)
+                lb $t4, ($t2)
+                bne $t3, $t4, nonmatch # if they match, increment offsets and check next
+                addu $t1, $t1, 1
+                addu $t2, $t2, 1
+                addu $t6, $t6, 1
+                #beq $t6, 9, closeDict
+                beq $t6, $s3, closeDict
+                j dictChecking
+nonmatch:          # if they don't
+                addu $t0, $t0, 11
+                j dictLoop
 closeDict:
-	bne $v0, 1, dictDone
-	lb $t1, usedMark
-	sb $t1, ($t0)
+                bne $v0, 1, dictDone
+                lb $t1, usedMark
+                sb $t1, ($t0)
 dictDone:
-	jr $ra
+                jr $ra
 
 
 stringLength:

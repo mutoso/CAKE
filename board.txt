@@ -1,246 +1,53 @@
-n c a
-l y r
-t g u
+t u e
+ u 
+d u s
 
-.accra    
-.accrual  
-.accuracy 
-.actual   
-.actually 
-.actuary  
-.agar     
-.agra     
-.alan     
-.alana    
-.alar     
-.alga     
-.allan    
-.allay    
-.ally     
-.alta     
-.altar    
-.anal     
-.angara   
-.angry    
-.angular  
-.anna     
-.annual   
-.annually 
-.annul    
-.annular  
-.araguaya 
-.aral     
-.ararat   
-.arrant   
-.array    
-.arty     
-.aryan    
-.atalanta 
-.atlanta  
-.attar    
-.attract  
-.augur    
-.augury   
-.aunt     
-.aura     
-.aural    
-.aurally  
-.ayala    
-.cagy     
-.calcutta 
-.calgary  
-.call     
-.canaan   
-.canal    
-.canary   
-.cancan   
-.cancun   
-.canny    
-.cant     
-.cantata  
-.cantu    
-.cara     
-.caracalla
-.caracul  
-.carat    
-.carl     
-.carla    
-.carly    
-.carnal   
-.carnally 
-.carr     
-.carry    
-.carryall 
-.cart     
-.cary     
-.catalan  
-.cataract 
-.catcall  
-.catgut   
-.catt     
-.catty    
-.cayuga   
-.clan     
-.clancy   
-.clang    
-.clara    
-.clay     
-.clung    
-.crag     
-.craggy   
-.cranny   
-.cray     
-.cull     
-.cult     
-.cultural 
-.cunt     
-.curacy   
-.curl     
-.curly    
-.currant  
-.curry    
-.curt     
-.curtly   
-.gala     
-.gall     
-.gallant  
-.gallantly
-.gallantry
-.gang     
-.gangly   
-.gantry   
-.gargantua
-.garry    
-.gary     
-.gatun    
-.gaul     
-.gaunt    
-.gayly    
-.glut     
-.gnarl    
-.gnarly   
-.gnat     
-.granary  
-.granny   
-.grant    
-.granular 
-.gray     
-.grungy   
-.grunt    
-.guaranty 
-.gulag    
-.gull     
-.gully    
-.gunny    
-.guru     
-.guttural 
-.guyana   
-.lacuna   
-.lacy     
-.lallygag 
-.lana     
-.lang     
-.lanny    
-.lara     
-.larry    
-.laura    
-.layla    
-.luann    
-.luau     
-.lucy     
-.lula     
-.lull     
-.lully    
-.lulu     
-.luna     
-.lunacy   
-.lunar    
-.lung     
-.lycra    
-.lyly     
-.lynn     
-.lyra     
-.nagy     
-.nancy    
-.nanny    
-.narc     
-.nary     
-.natal    
-.natty    
-.natural  
-.naturally
-.nauru    
-.null     
-.nutty    
-.racy     
-.raga     
-.raglan   
-.ragtag   
-.rally    
-.rang     
-.rangy    
-.rant     
-.rattan   
-.ratty    
-.raul     
-.rung     
-.runny    
-.runt     
-.rural    
-.rutan    
-.ryan     
-.tact     
-.talc     
-.tall     
-.tally    
-.tang     
-.tangy    
-.tanya    
-.tara     
-.tarantula
-.tarry    
-.tart     
-.tartan   
-.tartar   
-.tartary  
-.tartly   
-.tatar    
-.tatty    
-.taunt    
-.taut     
-.tautly   
-.tract    
-.tracy    
-.tran     
-.tray     
-.truancy  
-.truant   
-.truly    
-.tull     
-.tuna     
-.tunny    
-.turn     
-.tutu     
-.tyranny  
-.tyrant   
-.ucla     
-.ugly     
-.ulna     
-.ultra    
-.uncanny  
-.uncut    
-.unnatural
-.unruly   
-.ural     
-.uruguay  
-.uruguayan
-.yacc     
-.yalta    
-.yalu     
-.yang     
-.yarn     
-.yuan     
-.yucatan  
-.yucca    
-.yunnan   
+.deed    
+.deeded  
+.deeds   
+.detest  
+.detested
+.detests 
+.dude    
+.duded   
+.dudes   
+.duds    
+.dues    
+.duet    
+.duets   
+.duse    
+.dust    
+.dusted  
+.dusts   
+.estes   
+.seed    
+.seeded  
+.seeds   
+.sees    
+.sets    
+.settee  
+.settees 
+.seuss   
+.steed   
+.steeds  
+.stud    
+.studded 
+.studs   
+.suds    
+.sued    
+.suede   
+.sues    
+.suet    
+.teed    
+.tees    
+.tess    
+.test    
+.tested  
+.testes  
+.tests   
+.tues    
+.tutu    
+.tutus   
+.used    
+.uses    
 |
