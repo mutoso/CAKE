@@ -23,7 +23,7 @@ input: .space 10
 board: .asciiz "a b c\nd e f\ng h i\n"
 boardP: .space 20
 fout: .asciiz "board.txt"
-reservedspace: .byte 0:1024
+reservedspace: .byte 0:4096
 
 .text
 init:
@@ -32,7 +32,7 @@ init:
 	syscall
 	move $s7, $a0	# now $s6 has the low order 32 bits of time in ms, we don't need the upper 32 for realistic game lengths
 main:
-	la $a0, board
+	la $a0, reservedspace
  	li $v0, 4
  	syscall
 	li $v0, 4
@@ -84,6 +84,12 @@ loadDictionary:
        la $a1, reservedspace
        li $a2, 1024
        syscall
+       
+       # separate board from wordlist
+       la $t1, reservedspace
+       addi $t1, $t1, 18
+       li $t2, '\0'
+       sb $t2, ($t1)
     
 close:
        li $v0, 16      # close file
@@ -113,7 +119,7 @@ shuffle:
  
 shuffle1:
 	#Load board into registers
- 	la $t4, board
+ 	la $t4, reservedspace
  	lb $t0, 0($t4)
  	lb $t1, 2($t4)
  	lb $t2, 4($t4)
@@ -132,11 +138,11 @@ shuffle1:
  	sb $t6, 4($t4)
  	sb $t7, 2($t4)
  	sb $t8, 0($t4)
-    j shuffle
+    	j shuffle
  
 shuffle2:
 	#Load board into registers
- 	la $t4, board
+ 	la $t4, reservedspace
  	lb $t0, 0($t4)
  	lb $t1, 2($t4)
  	lb $t2, 4($t4)
@@ -159,7 +165,7 @@ shuffle2:
  
 shuffle3:
 	#Load board into registers
- 	la $t4, board
+ 	la $t4, reservedspace
  	lb $t0, 0($t4)
  	lb $t1, 2($t4)
  	lb $t2, 4($t4)
@@ -182,7 +188,7 @@ shuffle3:
  
 shuffle4:
 	#Load board into registers
- 	la $t4, board
+ 	la $t4, reservedspace
  	lb $t0, 0($t4)
  	lb $t1, 2($t4)
  	lb $t2, 4($t4)
@@ -247,7 +253,7 @@ validWord:	# else, valid word that hasn't already been used
 	j main
 	
 copyBoard:
-	la $t1, board
+	la $t1, reservedspace
 	la $t2, boardP
 	
 transfer:
@@ -429,6 +435,7 @@ invalidString:
 
 printfound:
 	la $t0, reservedspace # load reserved space string address into $t0
+	addi $t0, $t0, 19
 	addi $t4, $zero, 0x2A # * char
 	addi $t6, $zero, 0x7C # | char
 
