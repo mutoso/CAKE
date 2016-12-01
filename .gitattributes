@@ -1,5 +1,5 @@
 # Auto detect text files and perform LF normalization
-* text=lf # or = auto maybe
+* text=auto
 
 # declare file that will have lf line endings
 *.txt text eol = lf
