@@ -23,7 +23,7 @@ input: .space 10
 board: .asciiz "a b c\nd e f\ng h i\n"
 boardP: .space 20
 fout: .asciiz "board.txt"
-reservedspace: .byte 0:1024
+reservedspace: .byte 0:4096
 
 .text
 init:
@@ -82,6 +82,16 @@ loadDictionary:
        move $a0, $s6
        la $a1, reservedspace
        li $a2, 1024
+       syscall
+       
+       # separate board from wordlist
+       la $t1, reservedspace
+       addi $t1, $t1, 19
+       li $t2, '\0'
+       sb $t2, ($t1)
+       
+       la $a0, reservedspace
+       li  $v0, 4
        syscall
     
 close:
@@ -428,6 +438,7 @@ invalidString:
 
 printfound:
 	la $t0, reservedspace # load reserved space string address into $t0
+	addi $t0, $t0, 19
 	addi $t4, $zero, 0x2A # * char
 	addi $t6, $zero, 0x7C # | char
 
