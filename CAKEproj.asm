@@ -17,7 +17,7 @@ commTwo: .word 0x32			# a 2 in ascii hex
 unusedMark: .word 0x2E		# a . in ascii hex
 #usedMark: .word 0x2A		# a * in ascii hex
 usedMark: .ascii "*"
-endDictMark: .word 0x66		# an f in ascii hex
+endDictMark: .word 0x7c		# an | in ascii hex
 newLine: .word 0x0A
 input: .space 10
 board: .asciiz "a b c\nd e f\ng h i\n"
@@ -225,7 +225,6 @@ processing:
 	# else, valid word that hasn't already been used
 	# add to list
 	# update score
-	j main
 	
 	# check uses only board letters 0 or 1 times each
 	# at any point, if it fails jump or branch to invalidString
@@ -238,11 +237,13 @@ dictionary:
 	jal checkDict
 		# v0 will contain a 0 if not in the dictionary, a 1 if it's a valid new word, and a 2 if
 			# it's a valid word that's already been used
-	beqz $v0, invalidString
-	bne $v0, 1, validWord
+	beqz $v0, validWord
+	beq $v0, 2, invalidString
 	li $v0, 4
-	la $a0, usedwordmesg	# if word has already been used
+	la $a0, usedwordmesg	# if word has already been used, $v0 = 1
 	syscall
+	
+	j main
 validWord:	# else, valid word that hasn't already been used
 	# update as found
 	# update score
@@ -362,7 +363,7 @@ containsMid:
 checkDict:           # use lb to iterate over the word vs the word in the dictionary
                 # address of input word is in $a0
                 la $t0, reservedspace     # put address of dictionary into $t0
-                addu $t0, $t0, 18              #put in offset for the board
+                addu $t0, $t0, 19              #put in offset for the board
 dictLoop:
                 add $t6, $zero, $zero
                 # lb for letter
@@ -395,7 +396,7 @@ nonmatch:          # if they don't
                 addu $t0, $t0, 11
                 j dictLoop
 closeDict:
-                bne $v0, 1, dictDone
+                bne $v0, 0, dictDone # if found and unused, change mark to used *
                 lb $t1, usedMark
                 sb $t1, ($t0)
 dictDone:
@@ -496,7 +497,7 @@ printScore:
 	syscall
 	sub $t3, $a0, $s7	# now $t3 will have the time since the round started (in ms) as long as the game takes < ~49 days
 	
-	addi $t1, $zero, 6000
+	addi $t1, $zero, 60000
 	mtc1 $t3, $f1
 	mtc1 $t1, $f2
 	div.s $f0, $f1, $f2 # f0 now has length of game in min

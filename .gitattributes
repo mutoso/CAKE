@@ -1,8 +1,1 @@
-<<<<<<< HEAD
-# Auto detect text files and perform LF normalization
-* text=auto
-
-=======
->>>>>>> origin/master
-# declare file that will have lf line endings
 *.txt text eol=lf
