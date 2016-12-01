@@ -469,20 +469,46 @@ notUsed:
 endFound:
 	jr $ra
 
+numberOfFound:
+	la $t0, reservedspace # load reserved space string address into $t0
+	addi $t4, $zero, 0x2A # * char
+	addi $t6, $zero, 0x7C # | char
+	add $t2, $zero, $zero
+
+countLoop:
+	lb   $t1, 0($t0)
+	beq $t1, $t6, endCount # branch if $t1 is | indicating end of file
+	bne $t1, $t4, notFoundWord # branch if $t1 is not equal to *
+	addi $t2, $t2, 1 # increase count of found words
+notFoundWord:
+	addi $t0, $t0, 1
+	j countLoop
+
+endCount:
+	add $a0, $t2, $zero
+	jr $ra
+
 exit:
 	li $v0, 30	# fetch the current system time
 	syscall
 	sub $t3, $a0, $s7	# now $t3 will have the time since the round started (in ms) as long as the game takes < ~49 days
-	div $t1, $t3, 60000	# $t1 now has the length of the game in min
+	
+	addi $t1, $zero, 6000
+	mtc1 $t3, $f1
+	mtc1 $t1, $f2
+	div.s $f0, $f1, $f2 # f0 now has length of game in min
 	
 	# get the number of words found into $t0
+	jal numberOfFound
 	
-	div $s7, $t0, $t1
+	mtc1 $a0, $f1
+	div.s $f2, $f1, $f0
 	li $v0, 4
 	la $a0, scoremesg
 	syscall
 	li $v0, 1
-	add $a0, $s7, $zero		# assuming score is in $s7
+	mfc1 $t0, $f2
+	add $a0, $t0, $zero		# assuming score is in $t0
 	syscall		# display the score
 	li $v0, 4
 	la $a0, exitmesg	# say goodbye
