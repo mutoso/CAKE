@@ -86,7 +86,7 @@ loadDictionary:
        
        # separate board from wordlist
        la $t1, reservedspace
-       addi $t1, $t1, 19
+       addi $t1, $t1, 18
        li $t2, '\0'
        sb $t2, ($t1)
        
@@ -434,7 +434,7 @@ invalidString:
 
 printfound:
 	la $t0, reservedspace # load reserved space string address into $t0
-	addi $t0, $t0, 19
+	addi $t0, $t0, 18
 	addi $t4, $zero, 0x2A # * char
 	addi $t6, $zero, 0x7C # | char
 
