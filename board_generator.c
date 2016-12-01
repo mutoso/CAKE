@@ -35,6 +35,12 @@ bool contains_letter(char* string, char letter)
 int main()
 {
 	FILE* file = fopen("dictionary.txt", "r");
+	if (!file)
+	{
+		fprintf(stderr, "Cannot open dictionary.txt\n");
+		return 1;
+	}
+	
 	char line[10] = {'\0'};
 
 	int lines[9];
@@ -42,6 +48,8 @@ int main()
 	char board[10] = {'\0'};
 	int i;
 
+	printf("Generating...\n");
+	
 	/* for each line*/
 	while (fgets(line, sizeof(line), file))
 	{
