@@ -1,53 +1,293 @@
-t u e
- u 
-d u s
+e l c
+t v a
+o h u
 
-.deed    
-.deeded  
-.deeds   
-.detest  
-.detested
-.detests 
-.dude    
-.duded   
-.dudes   
-.duds    
-.dues    
-.duet    
-.duets   
-.duse    
-.dust    
-.dusted  
-.dusts   
-.estes   
-.seed    
-.seeded  
-.seeds   
-.sees    
-.sets    
-.settee  
-.settees 
-.seuss   
-.steed   
-.steeds  
-.stud    
-.studded 
-.studs   
-.suds    
-.sued    
-.suede   
-.sues    
-.suet    
-.teed    
-.tees    
-.tess    
-.test    
-.tested  
-.testes  
-.tests   
-.tues    
-.tutu    
-.tutus   
-.used    
-.uses    
+.acetate  
+.ache     
+.achoo    
+.actual   
+.actuate  
+.acute    
+.alcoa    
+*alcohol  
+.alcott   
+.alcove   
+.alec     
+.aleut    
+.allah    
+.allocate 
+.allot    
+.aloe     
+.aloha    
+.alta     
+.althea   
+.altho    
+.alto     
+.alva     
+.athlete  
+.atoll    
+.attach   
+.attlee   
+.auto     
+.cacao    
+.cache    
+.cachet   
+.cahoot   
+.calculate
+.calcutta 
+.call     
+.callao   
+.calve    
+.catcall  
+.catch    
+.catchall 
+.cato     
+.catt     
+.cattle   
+.cave     
+.caveat   
+.cell     
+.cello    
+.celt     
+.chalet   
+.chat     
+.chattel  
+.cheat    
+.cheetah  
+.chloe    
+.chocolate
+.chou     
+.chute    
+.cleat    
+.cleave   
+.cleo     
+.cloche   
+.clot     
+.cloth    
+.clothe   
+.clotho   
+.clout    
+.clove    
+.clue     
+.clutch   
+.coach    
+.coal     
+.coat     
+.cochlea  
+.cochleae 
+.cocoa    
+.cocteau  
+.coeval   
+.cola     
+.cole     
+.colette  
+.collate  
+.collect  
+.collocate
+.colo     
+.colt     
+.cool     
+.coot     
+.cote     
+.couch    
+.cove     
+.covet    
+.cthulhu  
+.cull     
+.culotte  
+.cult     
+.cute     
+.cutlet   
+.each     
+.eave     
+.echo     
+.elate    
+.elect    
+.elevate  
+.ella     
+.elul     
+.elva     
+.etch     
+.ethel    
+.etta     
+.eula     
+.evacuate 
+.evacuee  
+.evaluate 
+.evolve   
+.hale     
+.hall     
+.halo     
+.halt     
+.halve    
+.hatch    
+.hatchet  
+.hate     
+.hath     
+.haul     
+.have     
+.havel    
+.havoc    
+.heal     
+.health   
+.heat     
+.heath    
+.heave    
+.hecate   
+.heel     
+.hell     
+.hellhole 
+.hello    
+.helot    
+.hohhot   
+.hole     
+.holt     
+.hooch    
+.hoot     
+.hootch   
+.hotel    
+.hove     
+.hovel    
+.hula     
+.hull     
+.hutch    
+.hutu     
+.lace     
+.lactate  
+.latch    
+.late     
+.lath     
+.lathe    
+.laue     
+.lava     
+.laval    
+.leach    
+.leah     
+.leave    
+.leech    
+.lela     
+.leola    
+.leta     
+.letha    
+.lethal   
+.lethe    
+.lettuce  
+.levee    
+.level    
+.loath    
+.loathe   
+.local    
+.locale   
+.locate   
+.loco     
+.lola     
+.loll     
+.loot     
+.loth     
+.lott     
+.lotto    
+.louella  
+.lout     
+.love     
+.lovelace 
+.luau     
+.luce     
+.luella   
+.lula     
+.lull     
+.lulu     
+.lute     
+.lvov     
+.oahu     
+.oath     
+.occult   
+.ocelot   
+.ochoa    
+.octal    
+.octave   
+.octet    
+.octette  
+.olav     
+.oleo     
+.othello  
+.otto     
+.ouch     
+.outlet   
+.outvote  
+.oval     
+.ovulate  
+.ovule    
+.taco     
+.tact     
+.tahoe    
+.talc     
+.tale     
+.tall     
+.tate     
+.tattle   
+.tattoo   
+.taut     
+.teach    
+.teal     
+.teat     
+.teeth    
+.teethe   
+.teetotal 
+.tell     
+.telltale 
+.tevet    
+.that     
+.thatch   
+.thea     
+.thee     
+.theta    
+.thoth    
+.thou     
+.thule    
+.tlaloc   
+.toll     
+.toltec   
+.tool     
+.toot     
+.tooth    
+.toothache
+.total    
+.tote     
+.toto     
+.touch    
+.tout     
+.tull     
+.tulle    
+.tutu     
+.tuvalu   
+.uccello  
+.ucla     
+.ululate  
+.utah     
+.uvula    
+.uvulae   
+.vacate   
+.vacua    
+.vale     
+.valet    
+.valhalla 
+.valletta 
+.value    
+.valve    
+.vault    
+.veal     
+.vela     
+.velveeta 
+.velvet   
+.vetch    
+.veto     
+.vocal    
+.vole     
+.volt     
+.volta    
+.volvo    
+.vote     
+.vouch    
+.vulva    
+.vulvae   
 |
