@@ -15,7 +15,6 @@ contain: .asciiz "The input is contained in the board. \n"
 commOne: .word 0x31			# a 1 in ascii hex
 commTwo: .word 0x32			# a 2 in ascii hex
 unusedMark: .word 0x2E		# a . in ascii hex
-#usedMark: .word 0x2A		# a * in ascii hex
 usedMark: .ascii "*"
 endDictMark: .word 0x7c		# an | in ascii hex
 newLine: .word 0x0A
@@ -43,9 +42,6 @@ main:
 	la $a0, scoremesg
 	syscall
 	jal printScore   # print score
-	#li $v0, 1
-	#add $a0, $s7, $zero		# assuming score is in $s7
-	#syscall		# display the score
 	li $v0, 4
 	la $a0, newLine
 	syscall
@@ -220,22 +216,14 @@ processing:
 	jal containsCenter
 	jal contains
 	
-	# check if the word has been used already
-	# if word has already been used
-	# else, valid word that hasn't already been used
-	# add to list
-	# update score
-	
-	# check uses only board letters 0 or 1 times each
-	# at any point, if it fails jump or branch to invalidString
-	# check if word is contained in board (includes checking for duplicate letters)
+	# check if the word is in dictionary and if it has been used already
 	
 dictionary:
 	# check if the word has been used already
 	la $a0, input
 	
 	jal checkDict
-		# v0 will contain a 0 if not in the dictionary, a 1 if it's a valid new word, and a 2 if
+		# v0 will contain a 2 if not in the dictionary, a 0 if it's a valid new word, and a 1 if
 			# it's a valid word that's already been used
 	beqz $v0, validWord
 	beq $v0, 2, invalidString
@@ -369,7 +357,7 @@ dictLoop:
                 # lb for letter
                 lb $t5, ($t0)
                 lw $t3, endDictMark
-                bne $t5, $t3 inDict           # if first char is f
+                bne $t5, $t3 inDict           # if first char is |
                 addi $v0, $zero, 2
                 j closeDict
 inDict:
@@ -389,7 +377,6 @@ dictChecking:
                 addu $t1, $t1, 1
                 addu $t2, $t2, 1
                 addu $t6, $t6, 1
-                #beq $t6, 9, closeDict
                 beq $t6, $s3, closeDict
                 j dictChecking
 nonmatch:          # if they don't
@@ -428,7 +415,6 @@ invalidLength:
 	la $a0, notLong
 	syscall
 	
-
 invalidString:
 	li $v0, 4
 	la $a0, errormesg
